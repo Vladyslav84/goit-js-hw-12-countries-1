@@ -7,12 +7,12 @@ import manyContries from './templates/manyContries.hbs'
 const carditem = document.querySelector('.carditem');
 const input = document.querySelector('.input');
 
-input.addEventListener('input',  _debounce(() => {
-        let searhContry = input.value;
-        GetCountry(searhContry); 
-        
-    },500));
-   
+input.addEventListener('input', _debounce(() => {
+    let searhContry = input.value;
+    GetCountry(searhContry);
+
+}, 500));
+
 
 function GetCountry(CountryName) {
     return axios.get(
@@ -21,33 +21,33 @@ function GetCountry(CountryName) {
     )
         .then(function (response) {
 
-           const objCountry = response.data[0];
-         
-            if (response.data.length ===1)
+            const objCountry = response.data[0];
+
+            if (response.data.length === 1)
             {
                 const renderPage = templateCountry(objCountry);
-                carditem.innerHTML = renderPage;
+
+                createMarkUp(renderPage);
                 resetCountreName();
 
-            } else if(response.data.length >1 && response.data.length <=10 )
+            } else if (response.data.length > 1 && response.data.length <= 10)
             {
                 const renderPage1 = manyContries(response.data);
 
-                carditem.innerHTML = renderPage1;
+                createMarkUp(renderPage1);
 
-                
-
-            } else if (response.data.length > 11) {
+            } else if (response.data.length > 11)
+            {
 
                 return alert('Too many matches found. Please enter a more specific query!')
-                
+
             }
-            
+
         }).catch(error => {
             console.log(error);
             resetRenderPage();
         })
-      
+
 };
 
 const resetCountreName = () => {
@@ -58,8 +58,14 @@ const resetCountreName = () => {
 
 const resetRenderPage = () => {
 
-    if(!input.value)
+    if (!input.value)
 
-carditem.innerHTML = '';
-    
+        carditem.innerHTML = '';
+
 };
+
+
+function createMarkUp(markUpGrid) {
+
+    carditem.innerHTML = markUpGrid;
+}
