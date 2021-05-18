@@ -7,59 +7,57 @@ import manyContries from './templates/manyContries.hbs'
 const carditem = document.querySelector('.carditem');
 const input = document.querySelector('.input');
 
-input.addEventListener('input',  _debounce(() => {
-        let searhContry = input.value;
-        GetCountry(searhContry); 
-        
-    },500));
-   
+input.addEventListener('input', _debounce(() => {
+    let searhContry = input.value;
+    getCountry(searhContry);
 
-function GetCountry(CountryName) {
-    return axios.get(
-        `https://restcountries.eu/rest/v2/name/${ CountryName }
-`,
-    )
+}, 500));
+
+function getCountry(countryName) {
+         return axios.get(`https://restcountries.eu/rest/v2/name/${countryName}`)
+      
         .then(function (response) {
 
-           const objCountry = response.data[0];
-         
-            if (response.data.length ===1)
-            {
-                const renderPage = templateCountry(objCountry);
-                carditem.innerHTML = renderPage;
-                resetCountreName();
+         const objCountry = response.data[0];
 
-            } else if(response.data.length >1 && response.data.length <=10 )
-            {
-                const renderPage1 = manyContries(response.data);
+        if (response.data.length === 1)
+        {
+         const renderPage = templateCountry(objCountry);
+          createMarkUp(renderPage);
+          resetCountreName();
 
-                carditem.innerHTML = renderPage1;
-
-                
-
-            } else if (response.data.length > 11) {
-
-                return alert('Too many matches found. Please enter a more specific query!')
-                
-            }
+        } else if (response.data.length > 1 && response.data.length <= 10) {
             
+          const renderPage1 = manyContries(response.data);
+
+          createMarkUp(renderPage1);
+
+       } else if (response.data.length > 11){
+
+        return alert('Too many matches found. Please enter a more specific query!')
+
+        }
+
         }).catch(error => {
             console.log(error);
             resetRenderPage();
         })
-      
 };
 
 const resetCountreName = () => {
 
     input.value = '';
-
 };
 
 const resetRenderPage = () => {
 
-    if(!input.value)
+    if (!input.value)
 
-carditem.innerHTML = '';
-    
+        carditem.innerHTML = '';
+};
+
+
+function createMarkUp(markUpGrid) {
+
+    carditem.innerHTML = markUpGrid;
 };
